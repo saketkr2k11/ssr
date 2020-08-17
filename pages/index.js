@@ -69,29 +69,31 @@ class Home extends React.Component {
   };
   render() {
     return (
-      <div className='App'>
-        <h1>SpaceX Launch Programs</h1>
+      <html lang={'en'}>
+        <div className='App'>
+          <h1>SpaceX Launch Programs</h1>
 
-        <div className='maindiv'>
-          <Row>
-            <Col className='col-12 col-md-4 col-lg-3'>
-              <Sidebuttons handler={this.handler} />
-            </Col>
-            <Col className='col-12 col-md-8 col-lg-9'>
-              {this.state.loading ? (
-                <div>Loading..</div>
-              ) : this.state.data.length == 0 ? (
-                <div>No records found</div>
-              ) : (
-                <Page data={this.state.data} />
-              )}
-            </Col>
-          </Row>
+          <div className='maindiv'>
+            <Row>
+              <Col className='col-12 col-md-4 col-lg-3'>
+                <Sidebuttons handler={this.handler} />
+              </Col>
+              <Col className='col-12 col-md-8 col-lg-9'>
+                {this.state.loading ? (
+                  <div>Loading..</div>
+                ) : this.state.data.length == 0 ? (
+                  <div>No records found</div>
+                ) : (
+                  <Page data={this.state.data} />
+                )}
+              </Col>
+            </Row>
+          </div>
+          <div className='footer'>
+            <h6>Developed by Saket Kumar</h6>
+          </div>
         </div>
-        <div className='footer'>
-          <h6>Developed by Saket Kumar</h6>
-        </div>
-      </div>
+      </html>
     );
   }
 }
