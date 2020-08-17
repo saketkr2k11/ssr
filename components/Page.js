@@ -37,12 +37,12 @@ function Page(props) {
                     <span className='listKey'>Mission IDs:</span>
                     {x.mission_id.lenght !== 0 ? (
                       x.mission_id.map((i) => (
-                        <li key={i} className='listValue'>
+                        <span key={i} className='listValue'>
                           {i}
-                        </li>
+                        </span>
                       ))
                     ) : (
-                      <li></li>
+                      <span></span>
                     )}
                   </div>
                   <p>
