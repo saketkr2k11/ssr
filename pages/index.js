@@ -1,65 +1,99 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Page from '../components/Page';
+import Sidebuttons from '../components/SideButtons';
+import axios from 'axios';
+import { Row, Col } from 'reactstrap';
+import React from 'react';
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+class Home extends React.Component {
+  static async getInitialProps(ctx) {
+    const res = await fetch(`https://api.spacexdata.com/v3/launches?limit=100`);
+    const data = await res.json();
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    //   // Pass data to the page via props
+    return { data };
+  }
+  constructor(props) {
+    console.log(props);
+    super(props);
+    this.state = {
+      data: this.props.data,
+      yy: '',
+      launch: '',
+      land: '',
+    };
+    this.updateList = this.updateList.bind(this);
+  }
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+  async updateList() {
+    let url = 'https://api.spaceXdata.com/v3/launches?limit=100&';
+    let durl = '';
+    const { yy, launch, land } = this.state;
+    if (yy !== '' && land === '' && launch === '') {
+      durl = 'launch_year=' + parseInt(yy);
+    } else if (yy === '' && land !== '' && launch === '') {
+      durl = 'land_success=' + land;
+    } else if (yy === '' && land === '' && launch !== '') {
+      durl = 'launch_success=' + launch;
+    } else if (yy !== '' && land === '' && launch !== '') {
+      durl = 'launch_success=' + launch + '&launch_year=' + parseInt(yy);
+    } else if (yy !== '' && land !== '' && launch === '') {
+      durl = 'land_success=' + land + '&launch_year=' + parseInt(yy);
+    } else if (yy === '' && land !== '' && launch !== '') {
+      durl = 'land_success=' + land + '&launch_success=' + launch;
+    } else if (yy !== '' && land !== '' && launch !== '') {
+      durl =
+        'land_success=' +
+        land +
+        '&launch_success=' +
+        launch +
+        '&launch_year=' +
+        parseInt(yy);
+    }
+    url = url + durl;
+    console.log(url);
+    let response = await axios.get(url);
+    this.setState({ data: response.data, loading: false });
+  }
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+  handler = (val) => {
+    this.setState(
+      {
+        yy: val.yearFilter,
+        launch: val.launchFilter,
+        land: val.landFilter,
+      },
+      () => {
+        this.setState({ loading: true }, () => this.updateList());
+      }
+    );
+  };
+  render() {
+    return (
+      <div className='App'>
+        <h1>SpaceX Launch Programs</h1>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className='maindiv'>
+          <Row>
+            <Col className='col-12 col-md-4 col-lg-3'>
+              <Sidebuttons handler={this.handler} />
+            </Col>
+            <Col className='col-12 col-md-8 col-lg-9'>
+              {this.state.loading ? (
+                <div>Loading..</div>
+              ) : this.state.data.length == 0 ? (
+                <div>No records found</div>
+              ) : (
+                <Page data={this.state.data} />
+              )}
+            </Col>
+          </Row>
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+        <div className='footer'>
+          <h6>Developed by Saket Kumar</h6>
+        </div>
+      </div>
+    );
+  }
 }
+
+export default Home;
