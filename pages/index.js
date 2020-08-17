@@ -3,7 +3,6 @@ import Sidebuttons from '../components/SideButtons';
 import axios from 'axios';
 import { Row, Col } from 'reactstrap';
 import React from 'react';
-import Head from 'next/head';
 
 class Home extends React.Component {
   static async getInitialProps(ctx) {
@@ -14,7 +13,6 @@ class Home extends React.Component {
     return { data };
   }
   constructor(props) {
-    console.log(props);
     super(props);
     this.state = {
       data: this.props.data,
@@ -70,38 +68,29 @@ class Home extends React.Component {
   };
   render() {
     return (
-      <html lang={'en'}>
-        <Head>
-          <title>My page title</title>
-          <meta
-            name='viewport'
-            content='initial-scale=1.0, width=device-width'
-          />
-        </Head>
-        <div className='App'>
-          <h1>SpaceX Launch Programs</h1>
+      <div className='App'>
+        <h1>SpaceX Launch Programs</h1>
 
-          <div className='maindiv'>
-            <Row>
-              <Col className='col-12 col-md-4 col-lg-3'>
-                <Sidebuttons handler={this.handler} />
-              </Col>
-              <Col className='col-12 col-md-8 col-lg-9'>
-                {this.state.loading ? (
-                  <div>Loading..</div>
-                ) : this.state.data.length == 0 ? (
-                  <div>No records found</div>
-                ) : (
-                  <Page data={this.state.data} />
-                )}
-              </Col>
-            </Row>
-          </div>
-          <div className='footer'>
-            <h6>Developed by Saket Kumar</h6>
-          </div>
+        <div className='maindiv'>
+          <Row>
+            <Col className='col-12 col-md-4 col-lg-3'>
+              <Sidebuttons handler={this.handler} />
+            </Col>
+            <Col className='col-12 col-md-8 col-lg-9'>
+              {this.state.loading ? (
+                <div>Loading..</div>
+              ) : this.state.data.length == 0 ? (
+                <div>No records found</div>
+              ) : (
+                <Page data={this.state.data} />
+              )}
+            </Col>
+          </Row>
         </div>
-      </html>
+        <div className='footer'>
+          <h6>Developed by Saket Kumar</h6>
+        </div>
+      </div>
     );
   }
 }
